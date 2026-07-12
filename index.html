@@ -1702,8 +1702,10 @@
           </div>
           <div class="terminal-suggestions">
             <span class="suggestion-tag" data-cmd="pipeline">pipeline</span>
+            <span class="suggestion-tag" data-cmd="run-tests">run-tests</span>
             <span class="suggestion-tag" data-cmd="metrics">metrics</span>
             <span class="suggestion-tag" data-cmd="skills">skills</span>
+            <span class="suggestion-tag" data-cmd="help">help</span>
             <span class="suggestion-tag" data-cmd="clear">clear</span>
           </div>
         </div>
@@ -1956,11 +1958,11 @@
 
     if (cleanCmd === 'help') {
       appendLine(`<div class="t-out">Available commands:</div>`);
-      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">pipeline</span>&nbsp;&nbsp;&nbsp;&nbsp;- Simulating a full multi-stage CI/CD automation pipeline</div>`);
-      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">metrics</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Displaying verification statistics and test coverage</div>`);
-      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">skills</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Listing key tools, frameworks & languages</div>`);
-      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Clearing the console screen</div>`);
-      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">help</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Showing this help manual</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">pipeline</span> / <span class="t-key">run-tests</span>&nbsp;- Simulating a full multi-stage CI/CD automation pipeline</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">metrics</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Displaying verification statistics and test coverage</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">skills</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Listing key tools, frameworks & languages</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Clearing the console screen</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">help</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Showing this help manual</div>`);
       return;
     }
 
@@ -1973,7 +1975,7 @@
       return;
     }
 
-    if (cleanCmd === 'pipeline') {
+    if (cleanCmd === 'pipeline' || cleanCmd === 'run-tests') {
       termInput.disabled = true;
       termInput.placeholder = 'Pipeline in progress...';
       appendLine(`<div class="t-out" style="color:var(--accent2)">🚀 Starting CI/CD Integration Pipeline...</div>`);
