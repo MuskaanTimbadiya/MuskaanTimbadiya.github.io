@@ -5,21 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Muskaan Timbadiya — Senior Quality Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
   :root {
     --bg: #ffffff;
-    --surface: #f8f8f8;
-    --surface2: #f0f0f0;
-    --accent: #003d7a;
-    --accent2: #1a5490;
-    --accent3: #c41e3a;
-    --text: #1a1a1a;
-    --text-dim: #555555;
-    --text-faint: #888888;
-    --border: rgba(0,0,0,0.1);
-    --glow: none;
+    --surface: #f8f9fa;
+    --surface2: #f1f3f5;
+    --accent: #0f2e5c;
+    --accent2: #1e4b8a;
+    --accent3: #d9383a;
+    --accent-success: #10b981;
+    --text: #1a1f26;
+    --text-dim: #4a5568;
+    --text-faint: #94a3b8;
+    --border: rgba(15, 46, 92, 0.08);
+    --glow: 0 4px 20px rgba(15, 46, 92, 0.04);
+    --glow-btn: 0 4px 14px rgba(15, 46, 92, 0.15);
+    --card-bg: #ffffff;
+    --nav-bg: rgba(255, 255, 255, 0.85);
+    --terminal-bg: #ffffff;
+    --terminal-border: rgba(15, 46, 92, 0.1);
+    --terminal-bar-bg: #f8f9fa;
+    --blob-opacity: 0.03;
+    --grid-opacity: 0.05;
+    
+    --font-body: 'Archivo', sans-serif;
+    --font-title: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  [data-theme="dark"] {
+    --bg: #090d16;
+    --surface: #101622;
+    --surface2: #162032;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --accent3: #f43f5e;
+    --accent-success: #10b981;
+    --text: #f1f5f9;
+    --text-dim: #94a3b8;
+    --text-faint: #475569;
+    --border: rgba(99, 102, 241, 0.15);
+    --glow: 0 8px 30px rgba(99, 102, 241, 0.12);
+    --glow-btn: 0 4px 20px rgba(99, 102, 241, 0.35);
+    --card-bg: rgba(16, 22, 34, 0.65);
+    --nav-bg: rgba(9, 13, 22, 0.8);
+    --terminal-bg: #0c101a;
+    --terminal-border: rgba(99, 102, 241, 0.25);
+    --terminal-bar-bg: #101622;
+    --blob-opacity: 0.08;
+    --grid-opacity: 0.12;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,12 +66,13 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Georgia', serif;
+    font-family: var(--font-body);
     overflow-x: hidden;
     cursor: auto;
+    transition: background-color 0.3s, color 0.3s;
   }
 
-  /* Custom cursor - hidden in formal theme */
+  /* Custom cursor - active on pointer-fine screens */
   .cursor {
     display: none;
   }
@@ -51,31 +89,72 @@
     display: none;
   }
 
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9990; pointer-events: none;
+    background-image: none;
+    opacity: 0;
+    display: none;
+  }
+
+  /* ====== BLOBS ====== */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: var(--blob-opacity);
+    pointer-events: none;
+    z-index: 0;
+    animation: floatBlob 20s infinite ease-in-out alternate;
+    transition: opacity 0.5s;
+  }
+  .blob-1 {
+    width: 400px; height: 400px;
+    background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
+    top: 15%; left: 10%;
+  }
+  .blob-2 {
+    width: 500px; height: 500px;
+    background: linear-gradient(135deg, #06b6d4 0%, var(--accent) 100%);
+    bottom: 20%; right: 10%;
+    animation-duration: 25s;
+    animation-delay: -5s;
+  }
+  @keyframes floatBlob {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, -40px) scale(1.1); }
+    100% { transform: translate(-40px, 50px) scale(0.95); }
+  }
+
   /* ====== NAV ====== */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 1.5rem 4rem;
-    background: var(--bg);
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    transition: padding 0.4s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: padding 0.4s, background-color 0.3s, border-color 0.3s;
+    box-shadow: var(--glow);
   }
   nav.scrolled { padding: 1rem 4rem; }
 
   .nav-logo {
-    font-family: 'Georgia', serif;
+    font-family: var(--font-title);
     font-size: 1.4rem;
     color: var(--accent);
     text-decoration: none;
     letter-spacing: 0.02em;
     font-weight: 600;
+    transition: color 0.3s;
   }
   .nav-logo span { color: var(--accent); }
 
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
   .nav-links a {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.85rem;
     color: var(--text-dim);
     text-decoration: none;
@@ -83,7 +162,7 @@
     text-transform: uppercase;
     transition: color 0.3s;
     position: relative;
-    font-weight: 500;
+    font-weight: 600;
   }
   .nav-links a::after {
     content: '';
@@ -95,8 +174,13 @@
   .nav-links a:hover { color: var(--accent); }
   .nav-links a:hover::after { width: 100%; }
 
+  .nav-right {
+    display: flex;
+    align-items: center;
+  }
+
   .nav-cta {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -104,12 +188,29 @@
     background: var(--accent);
     padding: 0.7rem 1.6rem;
     text-decoration: none;
-    transition: background 0.3s, transform 0.2s;
-    clip-path: none;
-    border-radius: 2px;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    border-radius: 4px;
     font-weight: 600;
+    box-shadow: var(--glow-btn);
   }
   .nav-cta:hover { background: var(--accent2); transform: translateY(-1px); }
+
+  .theme-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 1rem;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.3s, background-color 0.3s, transform 0.2s;
+    margin-left: 1.5rem;
+  }
+  .theme-toggle-btn:hover {
+    border-color: var(--accent);
+    background: var(--surface2);
+    transform: scale(1.05);
+  }
 
   /* ====== HERO ====== */
   #hero {
@@ -120,11 +221,30 @@
     padding: 8rem 4rem 4rem;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+    background: var(--bg);
+    transition: background-color 0.3s;
+  }
+  #hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99, 102, 241, 0.07), transparent 80%);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.5s;
+  }
+  [data-theme="light"] #hero::after {
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(15, 46, 92, 0.03), transparent 80%);
   }
 
   .hero-grid-bg {
-    display: none;
+    display: block;
+    position: absolute; inset: 0;
+    background-image: radial-gradient(var(--border) 1.5px, transparent 1.5px);
+    background-size: 32px 32px;
+    opacity: var(--grid-opacity);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.3s;
   }
 
   .hero-orb {
@@ -135,64 +255,64 @@
 
   .hero-tag {
     display: inline-flex; align-items: center; gap: 0.5rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.72rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 0.5rem 1.2rem;
     margin-bottom: 2rem;
-    animation: none;
+    border-radius: 30px;
     font-weight: 600;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
   }
   .hero-tag::before {
     content: '';
     width: 6px; height: 6px;
-    background: var(--accent);
+    background: var(--accent-success);
     border-radius: 50%;
-    animation: none;
+    box-shadow: 0 0 8px var(--accent-success);
   }
 
   .hero-name {
-    font-family: 'Georgia', serif;
+    font-family: var(--font-title);
     font-size: clamp(3rem, 6vw, 5.5rem);
     line-height: 1.1;
     letter-spacing: -0.02em;
     color: var(--text);
     margin-bottom: 0.5rem;
-    animation: none;
     font-weight: 700;
   }
   .hero-name .italic { font-style: italic; color: var(--accent); }
 
   .hero-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
-    color: var(--text-dim);
-    letter-spacing: 0.05em;
-    margin-bottom: 2rem;
-    animation: none;
-    font-weight: 500;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    transition: color 0.3s;
   }
 
   .hero-desc {
-    font-size: 1rem;
-    line-height: 1.8;
+    font-size: 0.95rem;
+    line-height: 1.7;
     color: var(--text-dim);
     max-width: 480px;
     margin-bottom: 2.5rem;
-    animation: none;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
+    transition: color 0.3s;
   }
 
   .hero-actions {
     display: flex; gap: 1rem; flex-wrap: wrap;
-    animation: none;
   }
 
   .btn-primary {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.78rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -201,29 +321,32 @@
     padding: 0.9rem 2rem;
     text-decoration: none;
     display: inline-flex; align-items: center; gap: 0.5rem;
-    clip-path: none;
-    border-radius: 2px;
-    transition: background 0.3s, transform 0.2s;
+    border-radius: 4px;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
     font-weight: 600;
+    box-shadow: var(--glow-btn);
   }
-  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,61,122,0.15); }
+  .btn-primary:hover {
+    background: var(--accent2);
+    transform: translateY(-2px);
+  }
 
   .btn-outline {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.78rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent);
-    background: white;
-    border: 1.5px solid var(--accent);
+    color: var(--text);
+    background: transparent;
+    border: 1.5px solid var(--border);
     padding: 0.9rem 2rem;
     text-decoration: none;
     display: inline-flex; align-items: center; gap: 0.5rem;
-    transition: background 0.3s, color 0.3s;
-    border-radius: 2px;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+    border-radius: 4px;
     font-weight: 600;
   }
-  .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); background: #f8f8f8; }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--surface); }
 
   .hero-visual {
     position: relative; z-index: 2;
@@ -232,72 +355,253 @@
   }
 
   .hero-card {
-    background: white;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--border);
-    padding: 2.5rem;
+    padding: 2rem;
     width: 360px;
     position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: var(--glow);
+    border-radius: 8px;
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
   .hero-card::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0;
     height: 3px;
     background: var(--accent);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
   }
 
   .card-avatar {
-    width: 64px; height: 64px;
+    width: 56px; height: 56px;
     background: var(--accent);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Georgia', serif;
-    font-size: 1.8rem;
+    font-family: var(--font-title);
+    font-size: 1.6rem;
     color: white;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     overflow: hidden;
   }
   .card-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
   .card-name {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    margin-bottom: 0.2rem;
-    font-family: 'Georgia', serif;
+    margin-bottom: 0.1rem;
+    font-family: var(--font-title);
+    color: var(--text);
   }
   .card-role {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.72rem;
+    font-family: var(--font-title);
+    font-size: 0.7rem;
     color: var(--accent);
     letter-spacing: 0.08em;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
     font-weight: 600;
   }
 
+  /* ====== CONTROL PANEL TABS ====== */
+  .hero-card-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.2rem;
+    gap: 0.5rem;
+  }
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.5rem 0;
+    font-family: var(--font-title);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.3s, border-color 0.3s;
+    border-bottom: 2px solid transparent;
+  }
+  .tab-btn:hover {
+    color: var(--accent);
+  }
+  .tab-btn.active {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .tab-pane {
+    display: none;
+    animation: fadeIn 0.4s ease both;
+  }
+  .tab-pane.active {
+    display: block;
+  }
+
+  /* Overview Tab Grid */
   .card-stats {
     display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 0.8rem;
   }
   .stat {
     background: var(--surface);
-    padding: 0.8rem;
+    padding: 0.7rem;
     border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: background-color 0.3s, border-color 0.3s;
   }
   .stat-value {
-    font-family: 'Georgia', serif;
-    font-size: 1.6rem;
+    font-family: var(--font-title);
+    font-size: 1.5rem;
     color: var(--accent);
     line-height: 1;
     margin-bottom: 0.2rem;
     font-weight: 700;
   }
   .stat-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.68rem;
+    font-family: var(--font-body);
+    font-size: 0.65rem;
     color: var(--text-dim);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-weight: 500;
+  }
+
+  /* Metrics Circles */
+  .metrics-circles {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+    gap: 0.5rem;
+    padding-top: 0.2rem;
+  }
+  .metric-circle-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+  }
+  .circle-svg-wrap {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 0.4rem;
+  }
+  .circle-svg-wrap svg {
+    width: 100%;
+    height: 100%;
+  }
+  .circle-bg {
+    fill: none;
+    stroke: var(--surface2);
+    stroke-width: 5px;
+  }
+  .circle-fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 5px;
+    stroke-linecap: round;
+    stroke-dasharray: 157; /* 2 * PI * 25 */
+    stroke-dashoffset: 157;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 1.5s ease-in-out;
+  }
+  .circle-fill-green {
+    stroke: var(--accent-success);
+  }
+  .circle-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-title);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .circle-label {
+    font-family: var(--font-body);
+    font-size: 0.58rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Pipeline Stepper */
+  .pipeline-visualizer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 0.2rem 0;
+  }
+  .pipeline-step {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    position: relative;
+  }
+  .pipeline-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 20px;
+    bottom: -13px;
+    width: 2px;
+    background: var(--border);
+    transition: background-color 0.4s;
+  }
+  .pipeline-step.completed:not(:last-child)::after {
+    background: var(--accent-success);
+  }
+  .pipeline-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: var(--text-faint);
+    z-index: 2;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+  .pipeline-step.completed .pipeline-dot {
+    background: var(--accent-success);
+    border-color: var(--accent-success);
+    color: white;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  }
+  .pipeline-step.running .pipeline-dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    animation: pipelinePulse 1s infinite alternate;
+  }
+  @keyframes pipelinePulse {
+    from { box-shadow: 0 0 2px var(--accent); }
+    to { box-shadow: 0 0 10px var(--accent); }
+  }
+  .pipeline-info {
+    flex: 1;
+  }
+  .pipeline-label {
+    font-family: var(--font-title);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .pipeline-desc {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    color: var(--text-dim);
   }
 
   .card-tags {
@@ -305,36 +609,46 @@
     display: flex; flex-wrap: wrap; gap: 0.5rem;
   }
   .tag {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.68rem;
     letter-spacing: 0.05em;
     color: var(--accent);
     background: var(--surface);
     border: 1px solid var(--border);
     padding: 0.3rem 0.7rem;
-    transition: background 0.3s, border-color 0.3s;
+    border-radius: 4px;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
     font-weight: 500;
   }
-  .tag:hover { border-color: var(--accent); background: rgba(0,61,122,0.05); }
+  .tag:hover { border-color: var(--accent); background: var(--surface2); color: var(--accent2); }
 
   .floating-badge {
     position: absolute;
-    background: white;
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     padding: 0.7rem 1.2rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.7rem;
-    color: var(--text-dim);
+    color: var(--text);
     letter-spacing: 0.05em;
-    animation: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    box-shadow: var(--glow);
     font-weight: 500;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+    animation: floatBadge 6s infinite ease-in-out alternate;
   }
   .badge1 { top: -20px; right: -60px; }
-  .badge2 { bottom: 60px; left: -70px; }
+  .badge2 { bottom: 60px; left: -70px; animation-delay: -3s; }
   .badge-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
-  .badge-green .badge-dot { background: #2ecc71; }
+  .badge-green .badge-dot { background: var(--accent-success); }
   .badge-purple .badge-dot { background: var(--accent); }
+
+  @keyframes floatBadge {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+  }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
@@ -346,10 +660,10 @@
   }
 
   /* ====== SECTIONS COMMON ====== */
-  section { padding: 6rem 4rem; position: relative; }
+  section { padding: 8rem 4rem; position: relative; z-index: 2; }
   .section-header { margin-bottom: 4rem; }
   .section-num {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.72rem;
     color: var(--accent);
     letter-spacing: 0.15em;
@@ -358,11 +672,12 @@
     font-weight: 600;
   }
   .section-title {
-    font-family: 'Georgia', serif;
+    font-family: var(--font-title);
     font-size: clamp(2rem, 4vw, 3.2rem);
     letter-spacing: -0.01em;
     line-height: 1.15;
     font-weight: 700;
+    color: var(--text);
   }
   .section-title em { font-style: italic; color: var(--accent); }
   .section-line {
@@ -372,7 +687,7 @@
   }
 
   /* ====== ABOUT / SKILLS ====== */
-  #about { background: var(--surface); }
+  #about { background: var(--surface); transition: background-color 0.3s; }
 
   .about-grid {
     display: grid;
@@ -386,28 +701,33 @@
     line-height: 1.85;
     color: var(--text-dim);
     margin-bottom: 1.2rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
+    transition: color 0.3s;
   }
   .about-text strong { color: var(--text); font-weight: 700; }
   .about-highlight {
     border-left: 3px solid var(--accent);
     padding: 1.2rem 1.8rem;
-    background: rgba(0,61,122,0.04);
+    background: var(--surface2);
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
     margin: 1.5rem 0;
-    font-family: 'Georgia', serif;
+    font-family: var(--font-body);
     font-size: 1.1rem;
     font-style: italic;
     color: var(--text);
     line-height: 1.7;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
   }
 
   .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
   .skill-item {
-    background: white;
+    background: var(--card-bg);
     border: 1px solid var(--border);
     padding: 1.2rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    border-radius: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
     position: relative;
     overflow: hidden;
   }
@@ -420,11 +740,11 @@
     transition: transform 0.3s;
     transform-origin: bottom;
   }
-  .skill-item:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,61,122,0.1); }
+  .skill-item:hover { border-color: var(--accent); box-shadow: var(--glow); }
   .skill-item:hover::before { transform: scaleY(1); }
 
   .skill-cat {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.65rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -436,11 +756,11 @@
     font-size: 0.85rem;
     color: var(--text-dim);
     line-height: 1.7;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
   }
 
   /* ====== EXPERIENCE ====== */
-  #experience { background: var(--bg); }
+  #experience { background: var(--bg); transition: background-color 0.3s; }
 
   .timeline {
     position: relative;
@@ -451,6 +771,7 @@
     position: absolute; left: 0; top: 0; bottom: 0;
     width: 2px;
     background: var(--accent);
+    opacity: 0.3;
   }
 
   .timeline-item {
@@ -464,15 +785,16 @@
   .timeline-item.visible { opacity: 1; transform: translateY(0); }
 
   .timeline-dot {
-    position: absolute; left: -7px; top: 6px;
+    position: absolute; left: -6px; top: 6px;
     width: 14px; height: 14px;
-    background: white;
+    background: var(--bg);
     border: 3px solid var(--accent);
     border-radius: 50%;
+    transition: background-color 0.3s, border-color 0.3s;
   }
 
   .timeline-date {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.75rem;
     color: var(--accent);
     letter-spacing: 0.08em;
@@ -480,16 +802,17 @@
     font-weight: 600;
   }
   .timeline-role {
-    font-family: 'Georgia', serif;
+    font-family: var(--font-title);
     font-size: 1.5rem;
     margin-bottom: 0.3rem;
     font-weight: 700;
+    color: var(--text);
   }
   .timeline-company {
     font-size: 0.88rem;
     color: var(--text-dim);
     margin-bottom: 1.2rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
   }
   .timeline-company span { color: var(--accent2); font-weight: 600; }
 
@@ -498,10 +821,11 @@
     font-size: 0.9rem;
     color: var(--text-dim);
     line-height: 1.7;
-    padding: 0.5rem 0 0.5rem 1.2rem;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 0.6rem 0 0.6rem 1.2rem;
+    border-bottom: 1px solid var(--border);
     position: relative;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
+    transition: border-color 0.3s;
   }
   .timeline-achievements li::before {
     content: '▪';
@@ -512,7 +836,7 @@
   .timeline-achievements li:last-child { border-bottom: none; }
 
   /* ====== ACHIEVEMENTS ====== */
-  #achievements { background: var(--surface); }
+  #achievements { background: var(--surface); transition: background-color 0.3s; }
 
   .achievements-grid {
     display: grid;
@@ -521,18 +845,18 @@
   }
 
   .achievement-card {
-    background: white;
+    background: var(--card-bg);
     border: 1px solid var(--border);
     padding: 2rem;
     position: relative;
+    border-radius: 8px;
     overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s, background-color 0.3s;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.6s, transform 0.6s, border-color 0.3s, box-shadow 0.3s;
   }
   .achievement-card.visible { opacity: 1; transform: translateY(0); }
-  .achievement-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,61,122,0.1); }
+  .achievement-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--glow); }
 
   .achievement-card::after {
     content: '';
@@ -548,7 +872,7 @@
     margin-bottom: 1rem;
   }
   .achievement-num {
-    font-family: 'Georgia', serif;
+    font-family: var(--font-title);
     font-size: 2.2rem;
     color: var(--accent);
     line-height: 1;
@@ -559,17 +883,18 @@
     font-weight: 700;
     font-size: 0.95rem;
     margin-bottom: 0.6rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
+    color: var(--text);
   }
   .achievement-desc {
     font-size: 0.85rem;
     color: var(--text-dim);
     line-height: 1.65;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
   }
 
   /* ====== TECH STACK ====== */
-  #stack { background: var(--bg); overflow: hidden; }
+  #stack { background: var(--bg); overflow: hidden; transition: background-color 0.3s; }
 
   .stack-marquee-wrap {
     position: relative;
@@ -590,6 +915,9 @@
     animation: marquee 30s linear infinite;
     width: max-content;
   }
+  .stack-track:hover {
+    animation-play-state: paused;
+  }
   .stack-track2 {
     animation-direction: reverse;
     animation-duration: 25s;
@@ -602,21 +930,22 @@
 
   .stack-pill {
     display: flex; align-items: center; gap: 0.5rem;
-    background: white;
+    background: var(--card-bg);
     border: 1px solid var(--border);
     padding: 0.7rem 1.4rem;
-    font-family: 'Syne', sans-serif;
+    border-radius: 4px;
+    font-family: var(--font-title);
     font-size: 0.78rem;
     color: var(--text-dim);
     white-space: nowrap;
-    transition: border-color 0.3s, color 0.3s, background 0.3s;
+    transition: border-color 0.3s, color 0.3s, background-color 0.3s;
     font-weight: 500;
   }
-  .stack-pill:hover { border-color: var(--accent); color: var(--accent); background: #f8f8f8; }
+  .stack-pill:hover { border-color: var(--accent); color: var(--accent); background: var(--surface); }
   .stack-pill-icon { font-size: 1.1rem; }
 
   /* ====== GITHUB ====== */
-  #github { background: var(--surface); }
+  #github { background: var(--surface); transition: background-color 0.3s; }
 
   .github-grid {
     display: grid;
@@ -626,18 +955,19 @@
   }
 
   .repo-card {
-    background: white;
+    background: var(--card-bg);
     border: 1px solid var(--border);
     padding: 1.8rem;
+    border-radius: 8px;
     text-decoration: none;
     display: block;
-    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s, background-color 0.3s;
     position: relative;
   }
-  .repo-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,61,122,0.1); }
+  .repo-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--glow); }
 
   .repo-name {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.95rem;
     color: var(--accent);
     margin-bottom: 0.8rem;
@@ -649,11 +979,11 @@
     color: var(--text-dim);
     line-height: 1.65;
     margin-bottom: 1rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
   }
   .repo-meta {
     display: flex; gap: 1rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.72rem;
     color: var(--text-faint);
     font-weight: 500;
@@ -662,19 +992,43 @@
 
   .github-link {
     display: inline-flex; align-items: center; gap: 0.5rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.8rem;
     color: var(--accent);
     text-decoration: none;
     border: 1px solid var(--border);
     padding: 0.8rem 1.6rem;
-    transition: background 0.3s, border-color 0.3s;
+    border-radius: 4px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
     font-weight: 600;
   }
-  .github-link:hover { background: rgba(0,61,122,0.05); border-color: var(--accent); }
+  .github-link:hover { background: var(--surface2); border-color: var(--accent); }
+
+  /* SKELETON LOADERS */
+  .skeleton-card {
+    pointer-events: none;
+  }
+  .skeleton-line {
+    background: var(--surface2);
+    border-radius: 4px;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  .skeleton-title-line {
+    width: 60%; height: 18px; margin-bottom: 12px;
+  }
+  .skeleton-desc-line {
+    width: 90%; height: 14px; margin-bottom: 16px;
+  }
+  .skeleton-meta-line {
+    width: 40%; height: 12px;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; background: var(--border); }
+  }
 
   /* ====== CONTACT ====== */
-  #contact { background: var(--bg); }
+  #contact { background: var(--bg); transition: background-color 0.3s; }
 
   .contact-layout {
     display: grid;
@@ -684,12 +1038,13 @@
   }
 
   .contact-intro {
-    font-family: 'Georgia', serif;
+    font-family: var(--font-title);
     font-size: clamp(1.8rem, 3vw, 2.8rem);
     line-height: 1.2;
     letter-spacing: -0.01em;
     margin-bottom: 1.5rem;
     font-weight: 700;
+    color: var(--text);
   }
   .contact-intro em { font-style: italic; color: var(--accent); }
 
@@ -698,7 +1053,7 @@
     color: var(--text-dim);
     line-height: 1.8;
     margin-bottom: 2.5rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
   }
 
   .contact-links { display: flex; flex-direction: column; gap: 1rem; }
@@ -707,16 +1062,17 @@
     display: flex; align-items: center; gap: 1rem;
     text-decoration: none;
     padding: 1.2rem;
-    background: white;
+    border-radius: 8px;
+    background: var(--card-bg);
     border: 1px solid var(--border);
-    transition: border-color 0.3s, background 0.3s;
+    transition: border-color 0.3s, background-color 0.3s;
     color: var(--text);
   }
-  .contact-link:hover { border-color: var(--accent); background: #f8f8f8; }
+  .contact-link:hover { border-color: var(--accent); background: var(--surface); }
   .contact-link-icon {
     width: 40px; height: 40px;
     background: var(--accent);
-    border: none;
+    border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
     font-size: 1rem;
     flex-shrink: 0;
@@ -725,7 +1081,7 @@
   }
   .contact-link-info { flex: 1; }
   .contact-link-label {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-title);
     font-size: 0.65rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -733,23 +1089,25 @@
     margin-bottom: 0.2rem;
     font-weight: 600;
   }
-  .contact-link-value { font-size: 0.9rem; color: var(--text); font-family: 'Syne', sans-serif; }
-  .contact-link-arrow { color: var(--text-faint); font-size: 0.8rem; font-family: 'Syne', sans-serif; transition: color 0.3s; }
+  .contact-link-value { font-size: 0.9rem; color: var(--text); font-family: var(--font-body); }
+  .contact-link-arrow { color: var(--text-faint); font-size: 0.8rem; transition: color 0.3s; }
   .contact-link:hover .contact-link-arrow { color: var(--accent); }
 
   /* Terminal card */
   .terminal {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 0;
+    background: var(--terminal-bg);
+    border: 1px solid var(--terminal-border);
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: var(--glow);
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
   .terminal-bar {
-    background: var(--surface);
+    background: var(--terminal-bar-bg);
     padding: 0.9rem 1rem;
     display: flex; align-items: center; gap: 0.5rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--terminal-border);
+    transition: background-color 0.3s, border-color 0.3s;
   }
   .terminal-dot {
     width: 10px; height: 10px;
@@ -759,7 +1117,7 @@
   .td2 { background: #febc2e; }
   .td3 { background: #28c840; }
   .terminal-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     color: var(--text-dim);
     margin-left: auto;
@@ -768,17 +1126,61 @@
   }
   .terminal-body {
     padding: 1.5rem;
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-mono);
     font-size: 0.82rem;
-    line-height: 1.9;
+    line-height: 1.8;
     color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
   }
   .t-prompt { color: var(--accent); font-weight: 600; }
   .t-cmd { color: var(--text); }
   .t-out { color: var(--text-dim); }
   .t-key { color: var(--accent); font-weight: 600; }
-  .t-val { color: #c41e3a; }
-  .t-str { color: #f39c12; }
+  .t-val { color: var(--accent3); }
+  .t-str { color: var(--accent-success); }
+  
+  .terminal-input-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .terminal-input-line input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    flex: 1;
+  }
+  
+  .terminal-suggestions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed var(--border);
+  }
+  .suggestion-tag {
+    font-size: 0.72rem;
+    background: var(--surface);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .suggestion-tag:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
   .cursor-blink {
     display: inline-block;
     width: 8px; height: 14px;
@@ -796,9 +1198,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: background-color 0.3s, border-color 0.3s;
   }
   .footer-copy {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.72rem;
     color: var(--text-dim);
     letter-spacing: 0.05em;
@@ -807,7 +1210,7 @@
   .footer-copy span { color: var(--accent); font-weight: 700; }
   .footer-links { display: flex; gap: 2rem; }
   .footer-links a {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.72rem;
     color: var(--text-dim);
     text-decoration: none;
@@ -855,6 +1258,10 @@
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursor-ring"></div>
 
+<!-- Background Blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
 <!-- NAV -->
 <nav id="navbar">
   <a href="#hero" class="nav-logo">MT<span>.</span></a>
@@ -866,7 +1273,10 @@
     <li><a href="#github">GitHub</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="https://www.linkedin.com/in/muskaan-timbadiya/" target="_blank" class="nav-cta">Hire Me →</a>
+  <div class="nav-right">
+    <a href="https://www.linkedin.com/in/muskaan-timbadiya/" target="_blank" class="nav-cta">Hire Me →</a>
+    <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle dark/light theme">🌙</button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -877,7 +1287,6 @@
 
   <div class="hero-content">
     <div class="hero-tag">
-      <span class="badge-dot" style="background:var(--accent);"></span>
       Available for new opportunities
     </div>
     <h1 class="hero-name">
@@ -901,31 +1310,95 @@
           <img src="https://avatars.githubusercontent.com/u/70127131?v=4" alt="Muskaan Timbadiya" onerror="this.style.display='none'; this.parentElement.textContent='MT'">
         </div>
         <div class="card-name">Muskaan Timbadiya</div>
-        <div class="card-role">Senior Quality Engineer· AUTOMATION· AI</div>
-        <div class="card-stats">
-          <div class="stat">
-            <div class="stat-value">5+</div>
-            <div class="stat-label">Years Exp.</div>
+        <div class="card-role">Senior Quality Engineer · AUTOMATION · AI</div>
+        
+        <div class="hero-card-tabs">
+          <button class="tab-btn active" data-tab="overview">Overview</button>
+          <button class="tab-btn" data-tab="pipeline">CI/CD Pipeline</button>
+        </div>
+
+        <div class="tab-pane active" id="pane-overview">
+          <div class="metrics-circles">
+            <div class="metric-circle-item">
+              <div class="circle-svg-wrap">
+                <svg viewBox="0 0 64 64">
+                  <circle class="circle-bg" cx="32" cy="32" r="25"></circle>
+                  <circle class="circle-fill circle-fill-green" cx="32" cy="32" r="25" data-percent="100" style="stroke-dashoffset: 0;"></circle>
+                </svg>
+                <div class="circle-text">99.9%</div>
+              </div>
+              <span class="circle-label">Uptime</span>
+            </div>
+            <div class="metric-circle-item">
+              <div class="circle-svg-wrap">
+                <svg viewBox="0 0 64 64">
+                  <circle class="circle-bg" cx="32" cy="32" r="25"></circle>
+                  <circle class="circle-fill" cx="32" cy="32" r="25" data-percent="88" style="stroke-dashoffset: 18.8;"></circle>
+                </svg>
+                <div class="circle-text">88%</div>
+              </div>
+              <span class="circle-label">Pass Rate</span>
+            </div>
+            <div class="metric-circle-item">
+              <div class="circle-svg-wrap">
+                <svg viewBox="0 0 64 64">
+                  <circle class="circle-bg" cx="32" cy="32" r="25"></circle>
+                  <circle class="circle-fill" cx="32" cy="32" r="25" data-percent="85" style="stroke-dashoffset: 23.5;"></circle>
+                </svg>
+                <div class="circle-text">85%</div>
+              </div>
+              <span class="circle-label">Coverage</span>
+            </div>
           </div>
-          <div class="stat">
-            <div class="stat-value">80%+</div>
-            <div class="stat-label">Pass Rate</div>
+          <div class="card-stats">
+            <div class="stat">
+              <div class="stat-value" data-count="5">0</div>
+              <div class="stat-label">Years Exp.</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value" data-count="30">0%</div>
+              <div class="stat-label">Speed Gain</div>
+            </div>
           </div>
-          <div class="stat">
-            <div class="stat-value">900→</div>
-            <div class="stat-label">Tests Optimized</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value">30%</div>
-            <div class="stat-label">Speed Gain</div>
+          <div class="card-tags">
+            <span class="tag">Playwright</span>
+            <span class="tag">Selenium</span>
+            <span class="tag">GCP</span>
+            <span class="tag">REST Assured</span>
           </div>
         </div>
-        <div class="card-tags">
-          <span class="tag">Playwright</span>
-          <span class="tag">Selenium</span>
-          <span class="tag">Java</span>
-          <span class="tag">Rest Assured</span>
-          <span class="tag">BDD</span>
+
+        <div class="tab-pane" id="pane-pipeline">
+          <div class="pipeline-visualizer">
+            <div class="pipeline-step completed">
+              <div class="pipeline-dot">✓</div>
+              <div class="pipeline-info">
+                <div class="pipeline-label">Code Compilation & Lint</div>
+                <div class="pipeline-desc">Maven checkstyle & compile passed</div>
+              </div>
+            </div>
+            <div class="pipeline-step completed">
+              <div class="pipeline-dot">✓</div>
+              <div class="pipeline-info">
+                <div class="pipeline-label">API Integration Tests</div>
+                <div class="pipeline-desc">REST Assured contract tests passed</div>
+              </div>
+            </div>
+            <div class="pipeline-step running">
+              <div class="pipeline-dot">⚙</div>
+              <div class="pipeline-info">
+                <div class="pipeline-label">E2E Playwright Suite</div>
+                <div class="pipeline-desc">Running 450 tests in parallel...</div>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-dot">○</div>
+              <div class="pipeline-info">
+                <div class="pipeline-label">Deploy to Dev/Staging</div>
+                <div class="pipeline-desc">Pending E2E completion</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="floating-badge badge1 badge-green">
@@ -1031,9 +1504,9 @@
   <div class="achievements-grid">
     <div class="achievement-card">
       <div class="achievement-icon">🎯</div>
-      <div class="achievement-num">80%+</div>
+      <div class="achievement-num" data-count="80" data-suffix="%+">0%+</div>
       <div class="achievement-title">Consistent UI & API Automation Pass Rate</div>
-      <div class="achievement-desc">Engineered and executed a comprehensive UI & APIautomation strategy, achieving consistent 80%+ pass rate with a peak of 90% by expertly managing complex test suites.</div>
+      <div class="achievement-desc">Engineered and executed a comprehensive UI & API automation strategy, achieving consistent 80%+ pass rate with a peak of 90% by expertly managing complex test suites.</div>
     </div>
     <div class="achievement-card">
       <div class="achievement-icon">🚀</div>
@@ -1043,7 +1516,7 @@
     </div>
     <div class="achievement-card">
       <div class="achievement-icon">⚡</div>
-      <div class="achievement-num">1000→450</div>
+      <div class="achievement-num" data-count="450" data-prefix="1000→">1000→0</div>
       <div class="achievement-title">Test Suite Optimisation</div>
       <div class="achievement-desc">Optimised 1000+ test cases into a streamlined suite of 450 — directly improving test coverage and driving a significant reduction in manual testing effort.</div>
     </div>
@@ -1055,19 +1528,19 @@
     </div>
     <div class="achievement-card">
       <div class="achievement-icon">💎</div>
-      <div class="achievement-num">99.9%</div>
+      <div class="achievement-num" data-count="99.9" data-suffix="%" data-decimals="1">0%</div>
       <div class="achievement-title">System Uptime Achieved</div>
       <div class="achievement-desc">Successfully identified and reported critical defects that, once resolved, resulted in 99.9% uptime across production systems in the retail domain.</div>
     </div>
     <div class="achievement-card">
       <div class="achievement-icon">👥</div>
-      <div class="achievement-num">+200</div>
+      <div class="achievement-num" data-count="200" data-prefix="+">0</div>
       <div class="achievement-title">Critical Issues Resolved</div>
       <div class="achievement-desc">Regression strategy led to identification and resolution of over 200 critical issues, contributing to a 25% jump in post-launch user satisfaction scores.</div>
     </div>
     <div class="achievement-card">
       <div class="achievement-icon">📈</div>
-      <div class="achievement-num">50%</div>
+      <div class="achievement-num" data-count="50" data-suffix="%">0%</div>
       <div class="achievement-title">Self-Sustaining Test Data Injection</div>
       <div class="achievement-desc">Built a custom utility for on-the-fly test data creation, streamlining execution and reducing maintenance overhead by ensuring data state is handled directly within the test lifecycle.</div>
     </div>
@@ -1134,16 +1607,22 @@
   </div>
 
   <div class="github-grid" id="github-grid">
-    <!-- Populated live from profile-data.json — see script at bottom of page.
-         Falls back to this static content if the fetch fails. -->
-    <a href="https://github.com/MuskaanTimbadiya/Playwright_API" target="_blank" class="repo-card reveal">
-      <div class="repo-name">🚀 Playwright API Automation Framework</div>
-      <div class="repo-desc">Production-ready API testing framework with modular architecture, environment management, and CI/CD integration.</div>
-      <div class="repo-meta">
-        <span class="repo-lang">● JavaScript</span>
-        <span>Playwright · GitHub Actions</span>
-      </div>
-    </a>
+    <!-- Skeleton loader cards shown while fetching profile-data.json -->
+    <div class="repo-card skeleton-card">
+      <div class="skeleton-line skeleton-title-line"></div>
+      <div class="skeleton-line skeleton-desc-line"></div>
+      <div class="skeleton-line skeleton-meta-line"></div>
+    </div>
+    <div class="repo-card skeleton-card">
+      <div class="skeleton-line skeleton-title-line"></div>
+      <div class="skeleton-line skeleton-desc-line"></div>
+      <div class="skeleton-line skeleton-meta-line"></div>
+    </div>
+    <div class="repo-card skeleton-card">
+      <div class="skeleton-line skeleton-title-line"></div>
+      <div class="skeleton-line skeleton-desc-line"></div>
+      <div class="skeleton-line skeleton-meta-line"></div>
+    </div>
   </div>
 
   <a href="https://github.com/MuskaanTimbadiya" target="_blank" class="github-link reveal">
@@ -1205,18 +1684,28 @@
           <div class="terminal-dot td3"></div>
           <span class="terminal-title">muskaan@portfolio:~</span>
         </div>
-        <div class="terminal-body">
-          <div><span class="t-prompt">~</span> <span class="t-cmd">cat about.json</span></div>
-          <div><span class="t-out">{</span></div>
-          <div>&nbsp;&nbsp;<span class="t-key">"name"</span><span class="t-out">:</span> <span class="t-str">"Muskaan Timbadiya"</span><span class="t-out">,</span></div>
-          <div>&nbsp;&nbsp;<span class="t-key">"role"</span><span class="t-out">:</span> <span class="t-str">"Senior Quality Engineer"</span><span class="t-out">,</span></div>
-          <div>&nbsp;&nbsp;<span class="t-key">"experience"</span><span class="t-out">:</span> <span class="t-val">5</span><span class="t-out">,</span></div>
-          <div>&nbsp;&nbsp;<span class="t-key">"location"</span><span class="t-out">:</span> <span class="t-str">"Kolkata, India"</span><span class="t-out">,</span></div>
-          <div>&nbsp;&nbsp;<span class="t-key">"stack"</span><span class="t-out">: [</span><span class="t-str">"Playwright"</span><span class="t-out">,</span></div>
-          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Selenium"</span><span class="t-out">,</span> <span class="t-str">"Java"</span><span class="t-out">,</span> <span class="t-str">"GCP"</span><span class="t-out">],</span></div>
-          <div>&nbsp;&nbsp;<span class="t-key">"available"</span><span class="t-out">:</span> <span class="t-val">true</span></div>
-          <div><span class="t-out">}</span></div>
-          <div style="margin-top:0.5rem;"><span class="t-prompt">~</span> <span class="cursor-blink"></span></div>
+        <div class="terminal-body" id="terminal-body">
+          <div id="terminal-output">
+            <div><span class="t-prompt">~</span> <span class="t-cmd">cat about.json</span></div>
+            <div class="t-out">{</div>
+            <div class="t-out">&nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-str">"Muskaan Timbadiya"</span>,</div>
+            <div class="t-out">&nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-str">"Senior Quality Engineer"</span>,</div>
+            <div class="t-out">&nbsp;&nbsp;<span class="t-key">"experience"</span>: <span class="t-val">5</span>,</div>
+            <div class="t-out">&nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-str">"Kolkata, India"</span>,</div>
+            <div class="t-out">&nbsp;&nbsp;<span class="t-key">"stack"</span>: [<span class="t-str">"Playwright"</span>, <span class="t-str">"Selenium"</span>, <span class="t-str">"Java"</span>, <span class="t-str">"GCP"</span>],</div>
+            <div class="t-out">&nbsp;&nbsp;<span class="t-key">"available"</span>: <span class="t-val">true</span></div>
+            <div class="t-out">}</div>
+          </div>
+          <div class="terminal-input-line">
+            <span class="t-prompt">~</span>
+            <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" placeholder="Type a command (try 'pipeline')...">
+          </div>
+          <div class="terminal-suggestions">
+            <span class="suggestion-tag" data-cmd="pipeline">pipeline</span>
+            <span class="suggestion-tag" data-cmd="metrics">metrics</span>
+            <span class="suggestion-tag" data-cmd="skills">skills</span>
+            <span class="suggestion-tag" data-cmd="clear">clear</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1235,7 +1724,7 @@
 
 <script>
   // ---- Live sync with profile-data.json (single source of truth) ----
-  // This repo's own project cards are hardcoded above as a fallback in case
+  // This repo's own project cards are hardcoded below as a fallback in case
   // the fetch fails (e.g. offline, or the source repo is temporarily down).
   // Whenever profile-data.json is updated in the MuskaanTimbadiya/MuskaanTimbadiya
   // repo, this section updates automatically on next page load — no manual edits here.
@@ -1251,14 +1740,14 @@
       const allProjects = [...(data.genaiProjects || []), ...(data.qaProjects || [])]
         .filter(p => p.repo); // skip projects without a public repo (e.g. work-in-progress)
 
-      if (!allProjects.length) return;
+      if (!allProjects.length) throw new Error('no projects found');
 
       grid.innerHTML = allProjects.map(p => {
         const tags = (p.tags || []).join(' · ');
         const primaryTag = (p.tags || [])[0] || '';
         return `
           <a href="${p.repo}" target="_blank" class="repo-card reveal visible">
-            <div class="repo-name">${p.emoji} ${p.name}</div>
+            <div class="repo-name">${p.emoji || '🚀'} ${p.name}</div>
             <div class="repo-desc">${p.desc.replace(/\*\*/g, '')}</div>
             <div class="repo-meta">
               <span class="repo-lang">● ${primaryTag}</span>
@@ -1267,59 +1756,327 @@
           </a>`;
       }).join('');
     } catch (err) {
-      // Silently keep the static fallback cards already in the HTML above.
       console.warn('Could not load live profile-data.json, showing fallback projects.', err);
+      // Fallback repo card
+      grid.innerHTML = `
+        <a href="https://github.com/MuskaanTimbadiya/Playwright_API" target="_blank" class="repo-card reveal visible">
+          <div class="repo-name">🚀 Playwright API Automation Framework</div>
+          <div class="repo-desc">Production-ready API testing framework with modular architecture, environment management, and CI/CD integration.</div>
+          <div class="repo-meta">
+            <span class="repo-lang">● JavaScript</span>
+            <span>Playwright · GitHub Actions</span>
+          </div>
+        </a>`;
     }
   })();
 </script>
 
 <script>
-  // Custom cursor
+  // ====== THEME SWITCHER ======
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const rootHtml = document.documentElement;
+
+  const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  rootHtml.setAttribute('data-theme', savedTheme);
+  updateThemeUI(savedTheme);
+
+  themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = rootHtml.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    rootHtml.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeUI(newTheme);
+  });
+
+  function updateThemeUI(theme) {
+    if (theme === 'dark') {
+      themeToggleBtn.textContent = '☀️';
+    } else {
+      themeToggleBtn.textContent = '🌙';
+    }
+  }
+
+  // ====== HERO CARD TABS ======
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanes = document.querySelectorAll('.tab-pane');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.getAttribute('data-tab');
+      tabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      tabPanes.forEach(pane => {
+        if (pane.id === `pane-${tabName}`) {
+          pane.classList.add('active');
+        } else {
+          pane.classList.remove('active');
+        }
+      });
+    });
+  });
+
+  // ====== MOUSE SPOTLIGHT ======
+  const hero = document.getElementById('hero');
+  if (hero) {
+    hero.addEventListener('mousemove', e => {
+      const rect = hero.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      hero.style.setProperty('--mouse-x', `${x}px`);
+      hero.style.setProperty('--mouse-y', `${y}px`);
+    });
+  }
+
+  // ====== CUSTOM CURSOR ======
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursor-ring');
   let mx = 0, my = 0, rx = 0, ry = 0;
 
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
+    if (cursor) {
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    }
+  });
+
+  document.addEventListener('mouseleave', () => {
+    if (cursor && ring) {
+      cursor.style.opacity = '0';
+      ring.style.opacity = '0';
+    }
+  });
+  document.addEventListener('mouseenter', () => {
+    if (cursor && ring) {
+      cursor.style.opacity = '1';
+      ring.style.opacity = '1';
+    }
   });
 
   function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
+    rx += (mx - rx) * 0.15;
+    ry += (my - ry) * 0.15;
+    if (ring) {
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+    }
     requestAnimationFrame(animateRing);
   }
   animateRing();
 
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '18px';
-      cursor.style.height = '18px';
+  const interactives = 'a, button, .tag, .repo-card, .stack-pill, .contact-link, .suggestion-tag, .tab-btn';
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest(interactives);
+    if (target && cursor && ring) {
+      cursor.style.width = '16px';
+      cursor.style.height = '16px';
       ring.style.width = '52px';
       ring.style.height = '52px';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '10px';
-      cursor.style.height = '10px';
-      ring.style.width = '36px';
-      ring.style.height = '36px';
-    });
+      ring.style.borderColor = 'var(--accent2)';
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest(interactives);
+    if (target && cursor && ring) {
+      cursor.style.width = '8px';
+      cursor.style.height = '8px';
+      ring.style.width = '40px';
+      ring.style.height = '40px';
+      ring.style.borderColor = 'var(--accent)';
+    }
   });
 
-  // Progress bar
+  // ====== INTERACTIVE QA TERMINAL ======
+  const termInput = document.getElementById('terminal-input');
+  const termOutput = document.getElementById('terminal-output');
+  const termBody = document.getElementById('terminal-body');
+
+  if (termInput && termOutput) {
+    termInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const cmd = termInput.value.trim();
+        termInput.value = '';
+        if (cmd) {
+          handleCommand(cmd);
+        }
+      }
+    });
+
+    // Handle suggestion tags
+    document.querySelectorAll('.suggestion-tag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        const cmd = tag.getAttribute('data-cmd');
+        typeAndRunCommand(cmd);
+      });
+    });
+  }
+
+  function typeAndRunCommand(cmd) {
+    if (!termInput || termInput.disabled) return;
+    termInput.value = '';
+    let i = 0;
+    termInput.focus();
+
+    function type() {
+      if (i < cmd.length) {
+        termInput.value += cmd.charAt(i);
+        i++;
+        setTimeout(type, 50);
+      } else {
+        setTimeout(() => {
+          termInput.value = '';
+          handleCommand(cmd);
+        }, 150);
+      }
+    }
+    type();
+  }
+
+  function appendLine(content, className = '') {
+    const div = document.createElement('div');
+    if (className) div.className = className;
+    div.innerHTML = content;
+    termOutput.appendChild(div);
+    if (termBody) {
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+  }
+
+  async function handleCommand(cmd) {
+    // Echo command
+    appendLine(`<div><span class="t-prompt">~</span> <span class="t-cmd">${escapeHTML(cmd)}</span></div>`);
+
+    const cleanCmd = cmd.toLowerCase().trim();
+
+    if (cleanCmd === 'clear') {
+      termOutput.innerHTML = '';
+      return;
+    }
+
+    if (cleanCmd === 'help') {
+      appendLine(`<div class="t-out">Available commands:</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">pipeline</span>&nbsp;&nbsp;&nbsp;&nbsp;- Simulating a full multi-stage CI/CD automation pipeline</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">metrics</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Displaying verification statistics and test coverage</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">skills</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Listing key tools, frameworks & languages</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Clearing the console screen</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;<span class="t-key">help</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Showing this help manual</div>`);
+      return;
+    }
+
+    if (cleanCmd === 'skills') {
+      appendLine(`<div class="t-out">Verification Tools & Languages:</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;[Languages]      Java, JavaScript, SQL</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;[Frameworks]     Playwright, Selenium, REST Assured, TestNG</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;[Cloud/CI-CD]    GCP (Google Cloud Platform), GitHub Actions, Maven</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;[Defect Mgmt]    JIRA, Confluence, Git</div>`);
+      return;
+    }
+
+    if (cleanCmd === 'pipeline') {
+      termInput.disabled = true;
+      termInput.placeholder = 'Pipeline in progress...';
+      appendLine(`<div class="t-out" style="color:var(--accent2)">🚀 Starting CI/CD Integration Pipeline...</div>`);
+
+      const pipelineSteps = [
+        { text: '🔧 Stage 1: Code Quality Validation', delay: 100 },
+        { text: '&nbsp;&nbsp;[INFO] Running ESLint checkstyle...', delay: 300 },
+        { text: '&nbsp;&nbsp;[PASS] 0 style issues, 0 errors found.', delay: 200 },
+        { text: '📦 Stage 2: Compilation & Unit Verification', delay: 100 },
+        { text: '&nbsp;&nbsp;[INFO] Executing Maven build clean test...', delay: 500 },
+        { text: '&nbsp;&nbsp;[PASS] Build Success. 42 unit checks completed.', delay: 200 },
+        { text: '🌐 Stage 3: API Contract & Security Auditing', delay: 100 },
+        { text: '&nbsp;&nbsp;[INFO] Triggering REST Assured schema checks...', delay: 400 },
+        { text: '&nbsp;&nbsp;[PASS] All contract schemas align with API definitions.', delay: 200 },
+        { text: '🎭 Stage 4: End-to-End Test Automation Suite', delay: 100 },
+        { text: '&nbsp;&nbsp;[INFO] Invoking Playwright grid runner (Chromium/Webkit/Firefox)...', delay: 400 },
+        { text: '&nbsp;&nbsp;[RUN] Running 450 system verification scripts...', delay: 1000 },
+        { text: '&nbsp;&nbsp;[PASS] 450/450 tests passed (100% success rate).', delay: 200 },
+        { text: '☁️ Stage 5: Dev Cloud Deployment', delay: 100 },
+        { text: '&nbsp;&nbsp;[INFO] Triggering deployment script to GCP Cloud Run...', delay: 500 },
+        { text: '&nbsp;&nbsp;[PASS] Service deployed successfully.', delay: 200 },
+        { text: '&nbsp;&nbsp;[INFO] Health check: 200 OK (uptime: 99.9%).', delay: 300 },
+        { text: '<span style="color:var(--accent-success)">=========================================</span>', delay: 100 },
+        { text: '🎉 <strong>Pipeline Success! Continuous deployment finished. Confident to deploy!</strong> 🚀', delay: 200 }
+      ];
+
+      for (const step of pipelineSteps) {
+        await sleep(step.delay);
+        appendLine(`<div class="t-out">${step.text}</div>`);
+      }
+
+      // Sync the pipeline tab visualizer as well!
+      const pipelineStepsUI = document.querySelectorAll('.pipeline-visualizer .pipeline-step');
+      if (pipelineStepsUI.length >= 4) {
+        pipelineStepsUI.forEach(s => s.classList.add('completed'));
+        const runningStep = document.querySelector('.pipeline-visualizer .pipeline-step.running');
+        if (runningStep) {
+          runningStep.classList.remove('running');
+          const dot = runningStep.querySelector('.pipeline-dot');
+          if (dot) dot.textContent = '✓';
+          const desc = runningStep.querySelector('.pipeline-desc');
+          if (desc) desc.textContent = 'All 450 tests passed successfully';
+        }
+        const lastStep = pipelineStepsUI[3];
+        lastStep.classList.add('completed');
+        const lastDot = lastStep.querySelector('.pipeline-dot');
+        if (lastDot) lastDot.textContent = '✓';
+        const lastDesc = lastStep.querySelector('.pipeline-desc');
+        if (lastDesc) lastDesc.textContent = 'Deployed to GCP Cloud Run ✓';
+      }
+
+      termInput.disabled = false;
+      termInput.placeholder = 'Type a command (try \'pipeline\')...';
+      termInput.focus();
+      return;
+    }
+
+    if (cleanCmd === 'metrics') {
+      appendLine(`<div class="t-out">Execution Quality & Code Coverage Dashboard:</div>`);
+      appendLine(`<div class="t-out" style="font-family:var(--font-mono); white-space:pre; line-height:1.3; margin:0.4rem 0;">`);
+      appendLine(`┌───────────────────────────┬──────────┬───────────┐`);
+      appendLine(`│ Category                  │ Coverage │ Stability │`);
+      appendLine(`├───────────────────────────┼──────────┼───────────┤`);
+      appendLine(`│ API Services              │   94.2%  │   100.0%  │`);
+      appendLine(`│ E2E Playwright Automation │   85.5%  │    99.8%  │`);
+      appendLine(`│ Database Integrations     │   88.0%  │   100.0%  │`);
+      appendLine(`│ Cloud Triggers (GCP)      │   90.1%  │    99.9%  │`);
+      appendLine(`└───────────────────────────┴──────────┴───────────┘`);
+      appendLine(`</div>`);
+      appendLine(`<div class="t-out">Suite Execution Performance Metrics:</div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;- Pre-Migration Run (SDT): &nbsp;&nbsp;&nbsp;<span class="t-val">12.5 mins</span></div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;- Post-Migration Run (PW): &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">3.62 secs</span></div>`);
+      appendLine(`<div class="t-out">&nbsp;&nbsp;- Overall Optimization Gain: &nbsp;<span class="t-str">30% faster cycles</span></div>`);
+      return;
+    }
+
+    // Unknown command
+    appendLine(`<div class="t-out" style="color:var(--accent3)">bash: command not found: ${escapeHTML(cleanCmd)}. Type 'help' for options.</div>`);
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // ====== GENERAL BEHAVIORS ======
+  // Progress bar & navbar state
   const bar = document.getElementById('progress-bar');
   window.addEventListener('scroll', () => {
-    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
-    bar.style.width = pct + '%';
-
-    // Navbar scroll state
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    if (bar) {
+      const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+      bar.style.width = pct + '%';
+    }
+    const nav = document.getElementById('navbar');
+    if (nav) {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    }
   });
 
-  // Scroll reveal with IntersectionObserver
+  // Scroll reveal IntersectionObserver
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -1330,12 +2087,64 @@
 
   document.querySelectorAll('.reveal, .timeline-item, .achievement-card').forEach(el => observer.observe(el));
 
-  // Stagger achievement cards
+  // Stagger delay for achievements
   document.querySelectorAll('.achievement-card').forEach((card, i) => {
     card.style.transitionDelay = (i * 0.1) + 's';
   });
 
-  // Smooth nav scroll
+  // Scroll-triggered metric count-up
+  const countObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const targetValue = parseFloat(el.getAttribute('data-count'));
+        const prefix = el.getAttribute('data-prefix') || '';
+        const suffix = el.getAttribute('data-suffix') || '';
+        const decimals = parseInt(el.getAttribute('data-decimals')) || 0;
+        const duration = 1500;
+        const startTime = performance.now();
+
+        function updateCount(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeProgress = progress * (2 - progress); // Ease-out quad
+          const currentValue = easeProgress * targetValue;
+          
+          el.textContent = prefix + currentValue.toFixed(decimals) + suffix;
+
+          if (progress < 1) {
+            requestAnimationFrame(updateCount);
+          } else {
+            el.textContent = prefix + targetValue.toFixed(decimals) + suffix;
+          }
+        }
+        requestAnimationFrame(updateCount);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+
+  // Trigger SVG circle progress animations
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.circle-fill').forEach(circle => {
+          const percent = parseFloat(circle.getAttribute('data-percent'));
+          const radius = parseFloat(circle.getAttribute('r'));
+          const circumference = 2 * Math.PI * radius;
+          const offset = circumference - (percent / 100) * circumference;
+          circle.style.strokeDashoffset = offset;
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  const heroVisual = document.querySelector('.hero-visual');
+  if (heroVisual) heroObserver.observe(heroVisual);
+
+  // Smooth anchor scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const target = document.querySelector(a.getAttribute('href'));
