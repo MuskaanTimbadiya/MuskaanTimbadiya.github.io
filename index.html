@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Muskaan Timbadiya — Senior QA Automation Engineer</title>
+<title>Muskaan Timbadiya — Senior Quality Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 
@@ -1133,53 +1133,15 @@
     <div class="section-line"></div>
   </div>
 
-  <div class="github-grid">
+  <div class="github-grid" id="github-grid">
+    <!-- Populated live from profile-data.json — see script at bottom of page.
+         Falls back to this static content if the fetch fails. -->
     <a href="https://github.com/MuskaanTimbadiya/Playwright_API" target="_blank" class="repo-card reveal">
-      <div class="repo-name">Playwright API Automation Framework</div>
+      <div class="repo-name">🚀 Playwright API Automation Framework</div>
       <div class="repo-desc">Production-ready API testing framework with modular architecture, environment management, and CI/CD integration.</div>
       <div class="repo-meta">
         <span class="repo-lang">● JavaScript</span>
-        <span>API Testing · Playwright</span>
-      </div>
-    </a>
-    <a href="https://github.com/MuskaanTimbadiya/crypto-agent" target="_blank" class="repo-card reveal">
-      <div class="repo-name">🤖 Crypto Agent</div>
-      <div class="repo-desc">Hackathon project built with MCP-style tool architecture and deployed on cloud, integrating live CoinGecko API for real-time crypto prices.</div>
-      <div class="repo-meta">
-        <span class="repo-lang">● Python</span>
-        <span>FastAPI · Docker</span>
-      </div>
-    </a>
-    <a href="https://github.com/MuskaanTimbadiya/qa-test-strategy-playbook" target="_blank" class="repo-card reveal">
-      <div class="repo-name">📚 QA Test Strategy Playbook</div>
-      <div class="repo-desc">Practical QA strategy collection with risk-based testing models, release readiness checklists, metrics tracking, and governance templates.</div>
-      <div class="repo-meta">
-        <span class="repo-lang">● Strategy</span>
-        <span>QA Playbook</span>
-      </div>
-    </a>
-    <a href="https://github.com/MuskaanTimbadiya/Booking-Flow" target="_blank" class="repo-card reveal">
-      <div class="repo-name">🎫 Booking Flow Automation Suite</div>
-      <div class="repo-desc">End-to-end UI automation for booking and refund journeys with dynamic data, environment-based secrets, and automated failure artifacts.</div>
-      <div class="repo-meta">
-        <span class="repo-lang">● JavaScript</span>
-        <span>Playwright · Node.js</span>
-      </div>
-    </a>
-    <a href="https://github.com/MuskaanTimbadiya/BallotBuddy" target="_blank" class="repo-card reveal">
-      <div class="repo-name">🗳️ BallotBuddy</div>
-      <div class="repo-desc">AI-powered civic assistant for Indian elections, offering multilingual guidance and deployed on Google Cloud Run with Docker.</div>
-      <div class="repo-meta">
-        <span class="repo-lang">● Node.js</span>
-        <span>Express · GCP</span>
-      </div>
-    </a>
-    <a href="https://github.com/MuskaanTimbadiya/multi-agent" target="_blank" class="repo-card reveal">
-      <div class="repo-name">🚀 🧠 NeuraFlow AI — Multi-Agent Productivity Assistant</div>
-      <div class="repo-desc">A Multi-Agent AI system that manages tasks, events, and notes using natural language.</div>
-      <div class="repo-meta">
-        <span class="repo-lang">● Python</span>
-        <span>FastAPI · Docker · Gemini API · SQLite</span>
+        <span>Playwright · GitHub Actions</span>
       </div>
     </a>
   </div>
@@ -1270,6 +1232,46 @@
     <a href="mailto:muskaantimbadiya98@gmail.com">Email</a>
   </div>
 </footer>
+
+<script>
+  // ---- Live sync with profile-data.json (single source of truth) ----
+  // This repo's own project cards are hardcoded above as a fallback in case
+  // the fetch fails (e.g. offline, or the source repo is temporarily down).
+  // Whenever profile-data.json is updated in the MuskaanTimbadiya/MuskaanTimbadiya
+  // repo, this section updates automatically on next page load — no manual edits here.
+  (async function syncProjectsFromProfileData() {
+    const grid = document.getElementById('github-grid');
+    if (!grid) return;
+
+    try {
+      const res = await fetch('https://raw.githubusercontent.com/MuskaanTimbadiya/MuskaanTimbadiya/main/profile-data.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('fetch failed: ' + res.status);
+      const data = await res.json();
+
+      const allProjects = [...(data.genaiProjects || []), ...(data.qaProjects || [])]
+        .filter(p => p.repo); // skip projects without a public repo (e.g. work-in-progress)
+
+      if (!allProjects.length) return;
+
+      grid.innerHTML = allProjects.map(p => {
+        const tags = (p.tags || []).join(' · ');
+        const primaryTag = (p.tags || [])[0] || '';
+        return `
+          <a href="${p.repo}" target="_blank" class="repo-card reveal visible">
+            <div class="repo-name">${p.emoji} ${p.name}</div>
+            <div class="repo-desc">${p.desc.replace(/\*\*/g, '')}</div>
+            <div class="repo-meta">
+              <span class="repo-lang">● ${primaryTag}</span>
+              <span>${tags}</span>
+            </div>
+          </a>`;
+      }).join('');
+    } catch (err) {
+      // Silently keep the static fallback cards already in the HTML above.
+      console.warn('Could not load live profile-data.json, showing fallback projects.', err);
+    }
+  })();
+</script>
 
 <script>
   // Custom cursor
